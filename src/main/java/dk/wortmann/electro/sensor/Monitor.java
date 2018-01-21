@@ -51,7 +51,9 @@ public class Monitor implements Runnable {
                     LOG.info("Blink");
                     LOG.debug("readingRatio: {}", readingRatio);
                     Reading readingItem = new Reading(reading, readingRatio);
-                    queue.add(readingItem);
+                    if (queue.offer(readingItem)) {
+                        this.startReTryWorker(readingItem);
+                    }
                     this.isBlinking = true;
                 }
             } else {
@@ -60,5 +62,17 @@ public class Monitor implements Runnable {
 
             this.buffer.add(reading);
         }
+    }
+
+    private void startReTryWorker(Reading readingItem) {
+        LOG.warn("Unable to add reading: {} to the queue", readingItem);
+
+        Runnable retryWorker = () -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                LOG.info("retrying to add reading: {} to queue", readingItem);
+                this.queue.offer(readingItem);
+            }
+        };
+        retryWorker.run();
     }
 }
