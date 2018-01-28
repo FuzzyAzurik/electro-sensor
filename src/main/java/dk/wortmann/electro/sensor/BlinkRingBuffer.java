@@ -4,11 +4,11 @@ import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ReadingRingBuffer extends CircularFifoQueue<Integer> {
-    private static final Logger LOG = LogManager.getLogger(ReadingRingBuffer.class);
+public class BlinkRingBuffer extends CircularFifoQueue<Integer> {
+    private static final Logger LOG = LogManager.getLogger(BlinkRingBuffer.class);
     private int readingsSum;
 
-    public ReadingRingBuffer(int arraySize, int initialValue) {
+    public BlinkRingBuffer(int arraySize, int initialValue) {
         super(arraySize);
         this.readingsSum = 0;
 
@@ -21,11 +21,11 @@ public class ReadingRingBuffer extends CircularFifoQueue<Integer> {
 
     @Override
     public boolean add(Integer element) {
-        this.readingsSum -= this.peek();
+        int previousElement = this.peek();
         boolean wasChanged = super.add(element);
 
         if (wasChanged) {
-            this.readingsSum += element;
+            this.readingsSum += (element - previousElement);
         } else {
             LOG.error("Unable to add element {} to ring buffer", element);
         }

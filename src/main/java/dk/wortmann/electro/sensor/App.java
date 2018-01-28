@@ -12,10 +12,10 @@ public class App {
         GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
         GpioController controller = GpioFactory.getInstance();
         GpioPinDigitalOutput pin0 = controller.provisionDigitalOutputPin(RaspiPin.GPIO_27, "GPIO_27");
-        Queue<Reading> readingQueue = new LinkedBlockingDeque<>();
+        Queue<Blink> blinkQueue = new LinkedBlockingDeque<>();
 
 //        Monitor lightMonitor = new Monitor(controller, pin0);
-        Monitor lightMonitor = new Monitor(pin0, readingQueue, 1.25);
-        Worker worker = new Worker(readingQueue);
+        Monitor lightMonitor = new Monitor(pin0, blinkQueue, -80);
+        Worker worker = new Worker(blinkQueue);
     }
 }

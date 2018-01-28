@@ -9,9 +9,9 @@ import java.util.Queue;
 
 public class Worker implements Runnable {
     private static final Logger LOG = LogManager.getLogger(Worker.class);
-    private final Queue<Reading> queue;
+    private final Queue<Blink> queue;
 
-    public Worker(Queue<Reading> queue) {
+    public Worker(Queue<Blink> queue) {
         this.queue = queue;
 
         Thread worker = new Thread(this);
@@ -21,20 +21,16 @@ public class Worker implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            deQueue().ifPresent((reading) -> {
-                LOG.info("Processing reading: {}", reading);
+            deQueue().ifPresent((blink) -> {
+                LOG.info("Processing blink: {}", blink);
             });
         }
     }
 
-    private Optional<Reading> deQueue() {
-        try {
-            Reading reading = this.queue.remove();
-            LOG.info("Removed reading: {} from queue", reading);
+    private Optional<Blink> deQueue() {
+            Blink blink = this.queue.poll();
+            LOG.info("Removed blink: {} from queue", blink);
 
-            return Optional.ofNullable(reading);
-        } catch (NoSuchElementException e) {
-            return Optional.empty();
-        }
+            return Optional.ofNullable(blink);
     }
 }
