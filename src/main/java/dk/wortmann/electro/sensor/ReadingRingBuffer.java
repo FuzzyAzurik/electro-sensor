@@ -1,11 +1,14 @@
 package dk.wortmann.electro.sensor;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class ReadingsRingBuffer extends CircularFifoQueue<Integer> {
+public class ReadingRingBuffer extends CircularFifoQueue<Integer> {
+    private static final Logger LOG = LogManager.getLogger(ReadingRingBuffer.class);
     private int readingsSum;
 
-    public ReadingsRingBuffer(int arraySize, int initialValue) {
+    public ReadingRingBuffer(int arraySize, int initialValue) {
         super(arraySize);
         this.readingsSum = 0;
 
@@ -23,7 +26,10 @@ public class ReadingsRingBuffer extends CircularFifoQueue<Integer> {
 
         if (wasChanged) {
             this.readingsSum += element;
+        } else {
+            LOG.error("Unable to add element {} to ring buffer", element);
         }
+
         return wasChanged;
     }
 

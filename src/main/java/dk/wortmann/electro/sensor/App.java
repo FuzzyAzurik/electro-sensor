@@ -16,5 +16,6 @@ public class App {
 
 //        Monitor lightMonitor = new Monitor(controller, pin0);
         Monitor lightMonitor = new Monitor(pin0, readingQueue, 1.25);
+        Worker worker = new Worker(readingQueue);
     }
 }

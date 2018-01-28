@@ -5,15 +5,15 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ReadingsRingBufferTest {
+public class ReadingRingBufferTest {
 
     private final int arraySize = 5;
     private final int intialValue = 15000;
-    private ReadingsRingBuffer buffer;
+    private ReadingRingBuffer buffer;
 
     @Before
     public void setUp() throws Exception {
-        this.buffer = new ReadingsRingBuffer(arraySize, intialValue);
+        this.buffer = new ReadingRingBuffer(arraySize, intialValue);
     }
 
     @Test
