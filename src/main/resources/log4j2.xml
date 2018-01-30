@@ -6,7 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="dk.wortmann" level="trace" additivity="false">
+        <Logger name="dk.wortmann" level="info" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
         <Root level="error">

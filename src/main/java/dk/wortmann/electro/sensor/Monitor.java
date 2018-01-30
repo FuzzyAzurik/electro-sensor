@@ -20,7 +20,7 @@ public class Monitor implements Runnable {
         this.buffer = new BlinkRingBuffer(ARRAY_SIZE, READING_LIMIT);
         this.sensor = new Sensor(pin, READING_LIMIT);
         this.blinkController = new BlinkController(threshold);
-        Thread producer = new Thread(this);
+        Thread producer = new Thread(this,"Monitor");
         producer.start();
     }
 
@@ -29,7 +29,7 @@ public class Monitor implements Runnable {
             int reading = this.sensor.read();
 
             if (this.blinkController.isBlinking(reading, this.buffer)) {
-                Blink blinkItem = new Blink(reading);
+                Blink blinkItem = new Blink(reading, 99806);
                 if (!queue.offer(blinkItem)) {
                     this.startReTryWorker(blinkItem);
                 }
