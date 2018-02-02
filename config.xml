@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <meter name="Blegkilde Alle 187 ST" id="99806"/>
+    <gpio>GPIO_27</gpio>
+    <ringBuffer>
+        <size>4</size>
+        <initialValue>15000</initialValue>
+    </ringBuffer>
+    <controller>
+        <threshold>-80</threshold>
+        <thresholdSum>5000</thresholdSum>
+    </controller>
+    <endpoint>
+        <username>username</username>
+        <password>password</password>
+        <url>url</url>
+    </endpoint>
+</configuration>
