@@ -1,5 +1,6 @@
-package dk.wortmann.electro.sensor;
+package dk.wortmann.electro.sensor.control;
 
+import dk.wortmann.electro.ElectroConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,4 +1,4 @@
-package dk.wortmann.electro.sensor;
+package dk.wortmann.electro.sensor.control;
 
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.logging.log4j.LogManager;

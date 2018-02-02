@@ -1,5 +1,6 @@
 package dk.wortmann.electro.sensor;
 
+import dk.wortmann.electro.ElectroConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.junit.Before;
 import org.junit.Test;

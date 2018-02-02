@@ -109,7 +109,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>dk.wortmann.electro.sensor.App</mainClass>
+                                    <mainClass>dk.wortmann.electro.App</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>

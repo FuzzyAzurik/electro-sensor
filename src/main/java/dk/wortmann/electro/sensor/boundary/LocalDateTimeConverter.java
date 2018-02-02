@@ -1,4 +1,4 @@
-package dk.wortmann.electro.sensor;
+package dk.wortmann.electro.sensor.boundary;
 
 import com.google.gson.*;
 

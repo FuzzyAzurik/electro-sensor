@@ -1,4 +1,4 @@
-package dk.wortmann.electro.sensor;
+package dk.wortmann.electro.sensor.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

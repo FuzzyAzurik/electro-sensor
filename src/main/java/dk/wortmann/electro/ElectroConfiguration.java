@@ -1,4 +1,4 @@
-package dk.wortmann.electro.sensor;
+package dk.wortmann.electro;
 
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;

@@ -1,4 +1,4 @@
-package dk.wortmann.electro.sensor;
+package dk.wortmann.electro.sensor.control;
 
 import com.pi4j.io.gpio.GpioPin;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;

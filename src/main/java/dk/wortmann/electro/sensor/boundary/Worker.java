@@ -1,10 +1,9 @@
-package dk.wortmann.electro.sensor;
+package dk.wortmann.electro.sensor.boundary;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dk.wortmann.electro.sensor.model.Blink;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
@@ -14,7 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.Optional;

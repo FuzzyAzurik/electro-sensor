@@ -1,5 +1,6 @@
 package dk.wortmann.electro.sensor;
 
+import dk.wortmann.electro.sensor.control.BlinkRingBuffer;
 import org.junit.Before;
 import org.junit.Test;
 

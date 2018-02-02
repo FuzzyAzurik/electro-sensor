@@ -1,7 +1,10 @@
-package dk.wortmann.electro.sensor;
+package dk.wortmann.electro;
 
 
 import com.pi4j.io.gpio.*;
+import dk.wortmann.electro.sensor.model.Blink;
+import dk.wortmann.electro.sensor.boundary.Monitor;
+import dk.wortmann.electro.sensor.boundary.Worker;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
