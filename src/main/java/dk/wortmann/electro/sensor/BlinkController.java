@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 public class BlinkController {
     private static final Logger LOG = LogManager.getLogger(BlinkController.class);
-    private static final int SUM_THRESHOLD = 5000;
+    private static final int SUM_THRESHOLD = ElectroConfiguration.getInstance().getInt("");
     private final double threshold;
     private boolean isBlinking;
 
