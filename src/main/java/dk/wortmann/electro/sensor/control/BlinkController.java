@@ -6,13 +6,14 @@ import org.apache.logging.log4j.Logger;
 
 public class BlinkController {
     private static final Logger LOG = LogManager.getLogger(BlinkController.class);
-    private static final int SUM_THRESHOLD = ElectroConfiguration.getInstance().getInt("");
     private final double threshold;
+    private final int sumThreshold;
     private boolean isBlinking;
 
-    public BlinkController(double threshold) {
+    public BlinkController(double threshold, int sumThreshold) {
         this.isBlinking = false;
         this.threshold = threshold;
+        this.sumThreshold = sumThreshold;
     }
 
     private double calcReadingRatio(final int reading, final BlinkRingBuffer buffer) {
@@ -23,7 +24,7 @@ public class BlinkController {
     public boolean isBlinking(final int reading, final BlinkRingBuffer buffer) {
         double valueRatio = this.calcReadingRatio(reading, buffer);
         LOG.debug("value ratio: {}, {}", valueRatio, this.threshold);
-        if (valueRatio < this.threshold && buffer.getSum() > SUM_THRESHOLD) {
+        if (valueRatio < this.threshold && buffer.getSum() > this.sumThreshold) {
             if (!this.isBlinking) {
                 LOG.info("Blink! value ratio: {}", valueRatio);
                 return this.isBlinking = true;

@@ -10,13 +10,14 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class BlinkControllerTest {
-    private static final double THRESHOLD = -75;
+    private static final double THRESHOLD = -90;
+    private static final int SUM_THRESHOLD = 5000;
     private BlinkRingBuffer buffer;
     private BlinkController blinkController;
 
     @Before
     public void setUp() throws Exception {
-        this.blinkController = new BlinkController(THRESHOLD);
+        this.blinkController = new BlinkController(THRESHOLD, SUM_THRESHOLD);
         this.buffer = new BlinkRingBuffer(4, 15000);
     }
 

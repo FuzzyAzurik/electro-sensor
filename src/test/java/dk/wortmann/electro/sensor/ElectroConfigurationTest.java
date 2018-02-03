@@ -13,16 +13,7 @@ public class ElectroConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        config = ElectroConfiguration.getInstance();
-    }
-
-    @Test
-    public void getElement() {
-        String exptected = "GPIO_27";
-
-        String gpio_pin = config.getString("gpio");
-
-        assertEquals(exptected, gpio_pin);
+        config = ElectroConfiguration.getInstance("config-default.xml");
     }
 
     @Test
@@ -36,7 +27,7 @@ public class ElectroConfigurationTest {
 
     @Test
     public void getAttrOfElem() {
-        int expected = 99806;
+        int expected = 1;
 
         int result = config.getInt("meter[@id]");
 

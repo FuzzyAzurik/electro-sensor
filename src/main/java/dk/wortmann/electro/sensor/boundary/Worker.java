@@ -1,11 +1,13 @@
 package dk.wortmann.electro.sensor.boundary;
 
 import com.google.gson.GsonBuilder;
+import dk.wortmann.electro.ElectroConfiguration;
 import dk.wortmann.electro.sensor.model.Blink;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
@@ -20,8 +22,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Worker implements Runnable {
     private static final Logger LOG = LogManager.getLogger(Worker.class);
-    private static final int METER_ID = 99806;
-    private static final String ENDPOINT = "http://jacobwortmann.dk:9080/electro-backend/api/meter/" + METER_ID + "/readings/";
+    private static final String ENDPOINT = ElectroConfiguration.getInstance().getString("endpoint.url");
 
     private final LinkedBlockingQueue<Blink> queue;
     private final HttpClient client;
@@ -50,8 +51,9 @@ public class Worker implements Runnable {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeConverter())
                 .create()
                 .toJson(blink);
+
         HttpUriRequest request = RequestBuilder
-                .post(ENDPOINT)
+                .post(ENDPOINT.replace("{meterId}", String.valueOf(blink.getMeterId())))
                 .addHeader(new BasicHeader("Content-Type", "application/json"))
                 .setEntity(new StringEntity(json, Charset.forName("utf8")))
                 .build();

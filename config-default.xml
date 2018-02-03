@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- copy config-default.xml to config.xml -->
 <configuration>
-    <meter name="Blegkilde Alle 187 ST" id="99806"/>
-    <gpio>GPIO_27</gpio>
+    <meter name="House name" id="1"/>
+    <gpio_pin id="27"/>
     <ringBuffer>
         <size>4</size>
         <initialValue>15000</initialValue>
@@ -14,6 +14,6 @@
     <endpoint>
         <username>username</username>
         <password>password</password>
-        <url>url</url>
+        <url>http://localhost:8080/api/</url>
     </endpoint>
 </configuration>

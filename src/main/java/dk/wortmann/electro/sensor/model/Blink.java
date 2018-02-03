@@ -20,6 +20,18 @@ public class Blink {
         return lightValue;
     }
 
+    public double getLightRatio() {
+        return lightRatio;
+    }
+
+    public LocalDateTime getReadingTime() {
+        return readingTime;
+    }
+
+    public int getMeterId() {
+        return meterId;
+    }
+
     @Override
     public String toString() {
         return "Blink{" +
