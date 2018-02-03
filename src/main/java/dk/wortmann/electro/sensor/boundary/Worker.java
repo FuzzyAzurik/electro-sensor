@@ -1,6 +1,7 @@
 package dk.wortmann.electro.sensor.boundary;
 
 import com.google.gson.GsonBuilder;
+import dk.wortmann.electro.adaptors.LocalDateTimeConverter;
 import dk.wortmann.electro.sensor.model.Blink;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.http.*;
