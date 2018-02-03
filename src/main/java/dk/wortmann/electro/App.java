@@ -29,7 +29,7 @@ public class App {
         LinkedBlockingQueue<Blink> blinkQueue = new LinkedBlockingQueue<>();
 
         Monitor lightMonitor = new Monitor(pin0, blinkQueue, config);
-        Worker worker = new Worker(blinkQueue, "Worker-1");
-        Worker worker1 = new Worker(blinkQueue, "Worker-2");
+        Worker worker = new Worker(blinkQueue, "Worker-1", config);
+        Worker worker1 = new Worker(blinkQueue, "Worker-2", config);
     }
 }

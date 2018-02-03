@@ -1,7 +1,6 @@
 package dk.wortmann.electro.sensor.boundary;
 
 import com.pi4j.io.gpio.*;
-import dk.wortmann.electro.ElectroConfiguration;
 import dk.wortmann.electro.sensor.control.BlinkController;
 import dk.wortmann.electro.sensor.control.BlinkRingBuffer;
 import dk.wortmann.electro.sensor.control.Sensor;

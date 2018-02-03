@@ -1,13 +1,12 @@
 package dk.wortmann.electro.sensor.boundary;
 
 import com.google.gson.GsonBuilder;
-import dk.wortmann.electro.ElectroConfiguration;
 import dk.wortmann.electro.sensor.model.Blink;
+import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
@@ -22,14 +21,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Worker implements Runnable {
     private static final Logger LOG = LogManager.getLogger(Worker.class);
-    private static final String ENDPOINT = ElectroConfiguration.getInstance().getString("endpoint.url");
-
     private final LinkedBlockingQueue<Blink> queue;
+    private final String endpoint;
     private final HttpClient client;
 
 
-    public Worker(LinkedBlockingQueue<Blink> queue, String name) {
+    public Worker(LinkedBlockingQueue<Blink> queue, String name, XMLConfiguration config) {
         this.queue = queue;
+        this.endpoint = config.getString("endpoint.url");
         this.client = HttpClientBuilder.create().build();
 
         Thread worker = new Thread(this, name);
@@ -53,7 +52,7 @@ public class Worker implements Runnable {
                 .toJson(blink);
 
         HttpUriRequest request = RequestBuilder
-                .post(ENDPOINT.replace("{meterId}", String.valueOf(blink.getMeterId())))
+                .post(this.endpoint.replace("{meterId}", String.valueOf(blink.getMeterId())))
                 .addHeader(new BasicHeader("Content-Type", "application/json"))
                 .setEntity(new StringEntity(json, Charset.forName("utf8")))
                 .build();
