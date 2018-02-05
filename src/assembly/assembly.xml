@@ -11,9 +11,14 @@
     <files>
         <file>
             <source>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</source>
+            <destName>${project.artifactId}.jar</destName>
         </file>
         <file>
             <source>config.xml</source>
+        </file>
+        <file>
+            <source>electro-sensor.sh</source>
+            <fileMode>0744</fileMode>
         </file>
     </files>
 </assembly>
