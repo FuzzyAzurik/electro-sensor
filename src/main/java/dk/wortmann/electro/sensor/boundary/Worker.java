@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Worker implements Runnable {
@@ -65,9 +66,13 @@ public class Worker implements Runnable {
                 LOG.info("Blink was successfully created");
             } else {
                 LOG.error("Blink was not created reason: {}, status: {}", response.getStatusLine().getReasonPhrase(), response.getStatusLine().getStatusCode());
+                throw new Exception("Unable to create the blink");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOG.debug("Putting blink: {} back on the queue", blink);
+            if (!queue.offer(blink)) {
+                LOG.error("Putting the blink back onto the queue failed, discarding the event.");
+            }
         }
     }
 

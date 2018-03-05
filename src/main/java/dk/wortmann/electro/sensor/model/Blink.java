@@ -6,26 +6,41 @@ import java.util.Objects;
 public class Blink {
     private int lightValue;
     private double lightRatio;
-    private final LocalDateTime readingTime;
+    private final LocalDateTime insertedTime;
+    private final double kwhValue;
     private final int meterId;
 
     public Blink(int lightValue, int meterId) {
         this.lightValue = lightValue;
         this.lightRatio = 0.0;
-        this.readingTime = LocalDateTime.now();
+        this.insertedTime = LocalDateTime.now();
+        this.kwhValue = 0.0001;
         this.meterId = meterId;
     }
 
+
     public int getLightValue() {
         return lightValue;
+    }
+
+    public void setLightValue(int lightValue) {
+        this.lightValue = lightValue;
     }
 
     public double getLightRatio() {
         return lightRatio;
     }
 
-    public LocalDateTime getReadingTime() {
-        return readingTime;
+    public void setLightRatio(double lightRatio) {
+        this.lightRatio = lightRatio;
+    }
+
+    public LocalDateTime getInsertedTime() {
+        return insertedTime;
+    }
+
+    public double getKwhValue() {
+        return kwhValue;
     }
 
     public int getMeterId() {
@@ -36,6 +51,10 @@ public class Blink {
     public String toString() {
         return "Blink{" +
                 "lightValue=" + lightValue +
+                ", lightRatio=" + lightRatio +
+                ", insertedTime=" + insertedTime +
+                ", kwhValue=" + kwhValue +
+                ", meterId=" + meterId +
                 '}';
     }
 
@@ -43,13 +62,17 @@ public class Blink {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Blink blink1 = (Blink) o;
-        return lightValue == blink1.lightValue;
+        Blink blink = (Blink) o;
+        return lightValue == blink.lightValue &&
+                Double.compare(blink.lightRatio, lightRatio) == 0 &&
+                Double.compare(blink.kwhValue, kwhValue) == 0 &&
+                meterId == blink.meterId &&
+                Objects.equals(insertedTime, blink.insertedTime);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(lightValue);
+        return Objects.hash(lightValue, lightRatio, insertedTime, kwhValue, meterId);
     }
 }
