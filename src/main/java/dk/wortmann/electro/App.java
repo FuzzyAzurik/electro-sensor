@@ -2,9 +2,9 @@ package dk.wortmann.electro;
 
 
 import com.pi4j.io.gpio.*;
-import dk.wortmann.electro.sensor.model.Blink;
 import dk.wortmann.electro.sensor.boundary.Monitor;
 import dk.wortmann.electro.sensor.boundary.Worker;
+import dk.wortmann.electro.sensor.model.Blink;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -30,6 +30,5 @@ public class App {
 
         Monitor lightMonitor = new Monitor(pin0, blinkQueue, config);
         Worker worker = new Worker(blinkQueue, "Worker-1", config);
-        Worker worker1 = new Worker(blinkQueue, "Worker-2", config);
     }
 }

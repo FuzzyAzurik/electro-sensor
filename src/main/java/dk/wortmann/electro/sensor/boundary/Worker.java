@@ -4,7 +4,8 @@ import com.google.gson.GsonBuilder;
 import dk.wortmann.electro.adaptors.LocalDateTimeConverter;
 import dk.wortmann.electro.sensor.model.Blink;
 import org.apache.commons.configuration2.XMLConfiguration;
-import org.apache.http.*;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -14,11 +15,11 @@ import org.apache.http.message.BasicHeader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Worker implements Runnable {
@@ -26,12 +27,13 @@ public class Worker implements Runnable {
     private final LinkedBlockingQueue<Blink> queue;
     private final String endpoint;
     private final HttpClient client;
-
+    private final ExecutorService pool;
 
     public Worker(LinkedBlockingQueue<Blink> queue, String name, XMLConfiguration config) {
         this.queue = queue;
         this.endpoint = config.getString("endpoint.url");
         this.client = HttpClientBuilder.create().build();
+        this.pool = Executors.newFixedThreadPool(3);
 
         Thread worker = new Thread(this, name);
         worker.start();
@@ -40,11 +42,12 @@ public class Worker implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            deQueue().ifPresent((blink) -> {
+            deQueue().ifPresent((Blink blink) -> {
                 LOG.info("Processing blink: {}", blink);
-                sendBlink(blink);
+                this.pool.execute(() -> sendBlink(blink));
             });
         }
+        LOG.info("Worker has stopped");
     }
 
     private void sendBlink(Blink blink) {
