@@ -1,15 +1,20 @@
 package dk.wortmann.electro.sensor.boundary;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dk.wortmann.electro.adaptors.LocalDateTimeConverter;
 import dk.wortmann.electro.sensor.model.Blink;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.logging.log4j.LogManager;
@@ -27,12 +32,16 @@ public class Worker implements Runnable {
     private final LinkedBlockingQueue<Blink> queue;
     private final String endpoint;
     private final HttpClient client;
+    private final String username;
+    private final String password;
     private final ExecutorService pool;
 
     public Worker(LinkedBlockingQueue<Blink> queue, String name, XMLConfiguration config) {
         this.queue = queue;
         this.endpoint = config.getString("endpoint.url");
-        this.client = HttpClientBuilder.create().build();
+        this.username = config.getString("endpoint.username");
+        this.password = config.getString("endpoint.password");
+        this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider()).build();
         this.pool = Executors.newFixedThreadPool(3);
 
         Thread worker = new Thread(this, name);
@@ -86,5 +95,12 @@ public class Worker implements Runnable {
         } catch (InterruptedException e) {
             return Optional.empty();
         }
+    }
+
+    private CredentialsProvider provider() {
+        final CredentialsProvider provider = new BasicCredentialsProvider();
+        final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(this.username, this.password);
+        provider.setCredentials(AuthScope.ANY, credentials);
+        return provider;
     }
 }
