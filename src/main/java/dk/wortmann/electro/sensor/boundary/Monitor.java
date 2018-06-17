@@ -1,61 +1,62 @@
 package dk.wortmann.electro.sensor.boundary;
 
-import com.pi4j.io.gpio.*;
-import dk.wortmann.electro.sensor.control.BlinkController;
-import dk.wortmann.electro.sensor.control.BlinkRingBuffer;
-import dk.wortmann.electro.sensor.control.Sensor;
+import com.pi4j.io.gpio.GpioPin;
+import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
+import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import dk.wortmann.electro.sensor.model.Blink;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Queue;
 
-public class Monitor implements Runnable {
+public class Monitor implements GpioPinListenerDigital{
     private final static Logger LOG = LogManager.getLogger(Monitor.class);
-    private final Queue<Blink> queue;
     private final XMLConfiguration config;
-    private final Sensor sensor;
-    private final BlinkRingBuffer buffer;
-    private final BlinkController blinkController;
+    private final Queue<Blink> queue;
+    private LocalDateTime previousEvent;
 
     public Monitor(GpioPin pin, Queue<Blink> queue, XMLConfiguration config) {
         this.queue = queue;
         this.config = config;
-        this.buffer = new BlinkRingBuffer(this.config.getInt("ringBuffer.size"), this.config.getInt("sensor.readingLimit"));
-        this.sensor = new Sensor(pin, this.config.getInt("sensor.readingLimit"));
-        this.blinkController = new BlinkController(this.config.getInt("controller.threshold"), this.config.getInt("controller.thresholdSum"));
-
-        Thread producer = new Thread(this,"Monitor");
-        producer.start();
+        this.previousEvent = null;
+        setupListener(pin);
     }
 
-    public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
-            int reading = this.sensor.read();
+    private void setupListener(GpioPin pin) {
+        LOG.info("setting eventListener on pin: {}", pin.getName());
+        pin.addListener(this);
+        pin.setShutdownOptions(true);
+    }
 
-            if (this.blinkController.isBlinking(reading, this.buffer)) {
-                Blink blinkItem = new Blink(reading, this.config.getInt("meter[@id]"));
-                if (!queue.offer(blinkItem)) {
-                    this.startReTryWorker(blinkItem);
-                }
+    @Override
+    public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
+        if (event.getState().isHigh()) {
+            LocalDateTime now = LocalDateTime.now();
+            if (this.isBlink(now)) {
+                LOG.info("Blink!");
+                Blink blink = new Blink(100, this.config.getInt("meter[@id]"));
+                this.queue.add(blink);
             }
 
-            this.buffer.add(reading);
+            this.previousEvent = now;
         }
     }
 
+    private Boolean isBlink(LocalDateTime now) {
+        if (this.previousEvent == null) {
+            return true;
+        }
 
-
-    private void startReTryWorker(Blink blinkItem) {
-        LOG.warn("Unable to add reading: {} to the queue", blinkItem);
-
-        Runnable retryWorker = () -> {
-            while (!Thread.currentThread().isInterrupted()) {
-                LOG.info("retrying to add reading: {} to queue", blinkItem);
-                this.queue.offer(blinkItem);
-            }
-        };
-        retryWorker.run();
+        try {
+            long difference = ChronoUnit.MILLIS.between(this.previousEvent, now);
+            LOG.debug("Previous: {}, Now: {}, Difference is: {}", previousEvent, now, difference);
+            return difference > 200;
+        } catch (ArithmeticException e) {
+            // return true if difference causes overflow.
+            return true;
+        }
     }
 }

@@ -1,6 +1,5 @@
 package dk.wortmann.electro.sensor.boundary;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dk.wortmann.electro.adaptors.LocalDateTimeConverter;
 import dk.wortmann.electro.sensor.model.Blink;
@@ -35,6 +34,7 @@ public class Worker implements Runnable {
     private final String username;
     private final String password;
     private final ExecutorService pool;
+    private final Thread worker;
 
     public Worker(LinkedBlockingQueue<Blink> queue, String name, XMLConfiguration config) {
         this.queue = queue;
@@ -44,7 +44,8 @@ public class Worker implements Runnable {
         this.client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider()).build();
         this.pool = Executors.newFixedThreadPool(3);
 
-        Thread worker = new Thread(this, name);
+        LOG.info("Starting worker: {}", this);
+        this.worker = new Thread(this, name);
         worker.start();
     }
 
@@ -56,7 +57,11 @@ public class Worker implements Runnable {
                 this.pool.execute(() -> sendBlink(blink));
             });
         }
-        LOG.info("Worker has stopped");
+        LOG.info("Worker: {} has stopped", this);
+    }
+
+    public void stop() {
+        this.worker.interrupt();
     }
 
     private void sendBlink(Blink blink) {
