@@ -10,10 +10,10 @@ public class Blink {
     private final double kwhValue;
     private final int meterId;
 
-    public Blink(int lightValue, int meterId) {
-        this.lightValue = lightValue;
+    public Blink(LocalDateTime timestamp, int meterId) {
+        this.lightValue = 0;
         this.lightRatio = 0.0;
-        this.insertedTime = LocalDateTime.now();
+        this.insertedTime = timestamp;
         this.kwhValue = 0.0001;
         this.meterId = meterId;
     }

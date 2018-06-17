@@ -37,7 +37,7 @@ public class Monitor implements GpioPinListenerDigital{
             LocalDateTime now = LocalDateTime.now();
             if (this.isBlink(now)) {
                 LOG.info("Blink!");
-                Blink blink = new Blink(100, this.config.getInt("meter[@id]"));
+                Blink blink = new Blink(now, this.config.getInt("meter[@id]"));
                 this.queue.add(blink);
             }
 
